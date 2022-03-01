@@ -13,12 +13,10 @@ namespace Fuko\Masked;
 
 use InvalidArgumentException;
 
-use const FILTER_SANITIZE_STRING;
-
 use function abs;
 use function array_unshift;
 use function call_user_func_array;
-use function filter_var;
+use function htmlspecialchars;
 use function is_callable;
 use function round;
 use function strlen;
@@ -104,9 +102,12 @@ class Redact
 	*/
 	public static function disguise($value, $unmaskedChars = 4, $maskSymbol = '*')
 	{
-		$value = filter_var($value, FILTER_SANITIZE_STRING);
+		// return silently if $value is null
+		if(is_null($value)) return $value;
+		
+		$value = htmlspecialchars($value);
 		$unmaskedChars = (int) $unmaskedChars;
-		$maskSymbol = filter_var($maskSymbol, FILTER_SANITIZE_STRING);
+		$maskSymbol = htmlspecialchars($maskSymbol);
 
 		// not enough chars to unmask ?
 		//
